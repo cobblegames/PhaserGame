@@ -1,4 +1,5 @@
-import { InputComponent } from "./input-component"
+import * as Phaser from 'phaser';
+import { InputComponent } from "./input-component";
 
 export class KeyboardComponent extends InputComponent
 {
@@ -61,7 +62,7 @@ export class KeyboardComponent extends InputComponent
 
     get isAttackJustDown() : boolean
     {
-        return Phaser.Input.Keyboard.JustDown(this.#attackKey;
+        return Phaser.Input.Keyboard.JustDown(this.#attackKey);
     }
 
 
