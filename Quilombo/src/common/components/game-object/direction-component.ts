@@ -12,6 +12,7 @@ export class DirectionComponent extends BaseGameObjectComponent
     {
         super(gameObject);
         this.#direction = DIRECTION.DOWN;
+        this.#callback = onDirectionCallback;
     }
 
     get direction(): Direction
