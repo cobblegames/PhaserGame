@@ -6,6 +6,8 @@
  * to ensure we check for all possible values in an enum type object.
  */
 import * as Phaser from 'phaser';
+import { DIRECTION } from './common';
+import { Direction } from './types';
 
 
 export function exhaustiveGuard(_value: never): never {
@@ -22,4 +24,9 @@ export function isArcadePhysicsBody(
     }
 
     return body instanceof Phaser.Physics.Arcade.Body;
+  }
+
+  export function isDirection(direction: string): direction is Direction
+  {
+    return DIRECTION[direction] !== undefined;
   }
