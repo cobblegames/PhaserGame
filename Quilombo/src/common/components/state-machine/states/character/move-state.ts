@@ -1,15 +1,16 @@
 import { BaseCharacterState } from "./base-character-state";
-import { Player } from "../../../../../game-objects/player/player";
+
 import { CHARACTER_STATES } from "./character-states";
-import { PLAYER_ANIMATION_KEYS } from "../../../../assets";
+
 import { isArcadePhysicsBody } from "../../../../utils";
 import { Direction } from "../../../../types";
 import { DIRECTION } from "../../../../common";
+import { CharacterGameObject } from "../../../game-object/common/character-game-object";
 
 
 export class MoveState extends BaseCharacterState
 {
-    constructor(gameObject: Player) 
+    constructor(gameObject: CharacterGameObject) 
     {
         super(CHARACTER_STATES.MOVE_STATE, gameObject);
     }

@@ -1,13 +1,12 @@
 import { BaseCharacterState } from "./base-character-state";
-import { Player } from "../../../../../game-objects/player/player";
 import { CHARACTER_STATES } from "./character-states";
-
 import { isArcadePhysicsBody } from "../../../../utils";
+import { CharacterGameObject } from "../../../game-object/common/character-game-object";
 
 
 export class IdleState extends BaseCharacterState
 {
-    constructor(gameObject: Player) 
+    constructor(gameObject: CharacterGameObject) 
     {
         super(CHARACTER_STATES.IDLE_STATE, gameObject);
     }
