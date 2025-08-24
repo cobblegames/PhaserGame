@@ -9,6 +9,7 @@ export class GameScene extends Phaser.Scene
 {
   #controls!: KeyboardComponent;
   #player!: Player;
+  #spider!: Spider;
 
 
   constructor() {
@@ -40,13 +41,22 @@ export class GameScene extends Phaser.Scene
       }
     )
 
-    new Spider
+    this.#spider = new Spider
     (
-    {
-        scene: this,
-        position: {x: this.scale.width/2, y: this.scale.height/2+50},    
-    }
+      {
+          scene: this,
+          position: {x: this.scale.width/2, y: this.scale.height/2+50},    
+      }
     )
+
+    this.#spider.setCollideWorldBounds(true);
+  }
+
+  public update(): void 
+  {
+    
+    this.#spider.update();
+
   }
 
   
