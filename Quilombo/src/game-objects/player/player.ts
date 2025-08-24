@@ -62,8 +62,13 @@ export class Player extends CharacterGameObject
         config.scene.events.on(Phaser.Scenes.Events.POST_UPDATE, this.update, this);
         config.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, 
             () => config.scene.events.off(Phaser.Scenes.Events.POST_UPDATE, this.update, this));
+
+            this.physicsBody.setSize(12, 16, true).setOffset(this.width/2 - 5, this.height/2);
     }
 
-    
+ get physicsBody(): Phaser.Physics.Arcade.Body
+ {
+    return this.body as Phaser.Physics.Arcade.Body;
+ }   
     
 }

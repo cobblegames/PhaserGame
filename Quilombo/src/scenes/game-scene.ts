@@ -5,16 +5,16 @@ import { Player } from '../game-objects/player/player';
 import { KeyboardComponent } from '../common/components/input/keyboard-component';
 import { Spider } from '../common/components/game-object/enemies/spider';
 import { Wisp } from '../common/components/game-object/enemies/wisp';
+import { CharacterGameObject } from '../common/components/game-object/common/character-game-object';
 
 export class GameScene extends Phaser.Scene 
 {
   #controls!: KeyboardComponent;
   #player!: Player;
-  #spider!: Spider;
-  #wisp!: Wisp;
+  #enemyGroup!: Phaser.GameObjects.Group;
 
 
-  constructor() {
+constructor() {
     super({
       key: SCENE_KEYS.GAME_SCENE,
     });
@@ -34,6 +34,7 @@ export class GameScene extends Phaser.Scene
     .text(this.scale.width / 2, this.scale.height / 2, 'Game Scene 2', { fontFamily: ASSET_KEYS.FONT_PRESS_START_2P })
     .setOrigin(0.5);
 
+    
     this.#player = new Player
     (
       {
@@ -41,37 +42,48 @@ export class GameScene extends Phaser.Scene
         position: {x: this.scale.width/2, y: this.scale.height/2},
         controls: this.#controls,
       }
-    )
+    );
 
-    this.#spider = new Spider
+    this.#enemyGroup = this.add.group
     (
-      {
-          scene: this,
-          position: {x: this.scale.width/2, y: this.scale.height/2+50},    
-      }
-    )
-
-    this.#spider.setCollideWorldBounds(true);
-
-this.#wisp = new Wisp
-    (
-      {
-          scene: this,
-          position: {x: this.scale.width/2, y: this.scale.height/2-50},    
-      }
-    )
-
-    this.#wisp.setCollideWorldBounds(true);
-
+      [
+        new Spider
+          (
+            {
+                scene: this,
+                position: {x: this.scale.width/2, y: this.scale.height/2+50},    
+            }
+          )
+          ,
+        new Wisp
+            (
+              {
+                  scene: this,
+                  position: {x: this.scale.width/2, y: this.scale.height/2-50},    
+              }
+            )
+      ],
+        {
+          runChildUpdate: true,
+        }      
+    );
     
+    this.#registerColliders();
   }
 
-  public update(): void 
+  #registerColliders(): void
   {
-    
-    this.#spider.update();
-    this.#wisp.update();
+     this.#enemyGroup.getChildren().forEach((enemy) =>
+      {
+        const enemyGameObject = enemy as CharacterGameObject;
+        enemyGameObject.setCollideWorldBounds(true);
+      });
 
+      this.physics.add.collider(this.#player, this.#enemyGroup, (player, enemy) =>
+        {
+
+
+        }); 
   }
 
   
