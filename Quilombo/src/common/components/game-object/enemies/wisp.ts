@@ -40,7 +40,8 @@ export class Wisp extends CharacterGameObject
             isPlayer: false,
             animationConfig,
             speed: ENEMY_WISP_SPEED,
-            inputComponent: new InputComponent(), // Spiders don't use player controls
+            inputComponent: new InputComponent(), 
+            isInvulnerable: true,
         });
 
  

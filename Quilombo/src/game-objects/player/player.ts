@@ -5,7 +5,7 @@ import { IdleState } from '../../common/components/state-machine/states/characte
 import { CHARACTER_STATES } from '../../common/components/state-machine/states/character/character-states';
 import { MoveState } from '../../common/components/state-machine/states/character/move-state';
 
-import { PLAYER_SPEED } from '../../common/config';
+import { PLAYER_INVULNERABLE_AFTER_HIT_ANIMATION_DURATION, PLAYER_SPEED } from '../../common/config';
 
 import { AnimationConfig } from '../../common/components/game-object/animation-component';
 import { ASSET_KEYS, PLAYER_ANIMATION_KEYS } from '../../common/assets';
@@ -48,7 +48,9 @@ export class Player extends CharacterGameObject
             isPlayer: true,
             animationConfig,
             speed: PLAYER_SPEED,
-            inputComponent: config.controls
+            inputComponent: config.controls,
+            isInvulnerable: false,
+            invulnerableAfterHitAnimationDuration: PLAYER_INVULNERABLE_AFTER_HIT_ANIMATION_DURATION,
         });
 
 

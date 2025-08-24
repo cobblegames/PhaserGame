@@ -9,6 +9,7 @@ import { Direction, Position } from '../../../types';
 import { IdleState } from '../../state-machine/states/character/idle-state';
 import { MoveState } from '../../state-machine/states/character/move-state';
 import { CHARACTER_STATES } from '../../state-machine/states/character/character-states';
+import { InvulnerableComponent } from '../invulnerable-component';
 
 export type CharacterConfig = 
 {
@@ -21,6 +22,9 @@ export type CharacterConfig =
     speed: number;
     id?: string;
     isPlayer: boolean;
+    isInvulnerable?: boolean;
+    invulnerableAfterHitAnimationDuration?: number; 
+
 
 
 }
@@ -31,11 +35,12 @@ export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite
     protected _speedComponent: SpeedComponent;
     protected _directionComponent: DirectionComponent;
     protected _animationComponent: AnimationComponent;
+    protected _invulnerableComponent: InvulnerableComponent;
     protected _stateMachine: StateMachine;
     protected _isPlayer: boolean;
     constructor(config: CharacterConfig) 
     {
-        const{scene, position, assetKey, frame, speed, animationConfig, inputComponent, id} = config;
+        const{scene, position, assetKey, frame, speed, animationConfig, inputComponent, id, isInvulnerable, invulnerableAfterHitAnimationDuration} = config;
         const{x,y} = position
         super(scene,x,y,assetKey,frame || 0)
 
@@ -48,6 +53,7 @@ export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite
         this._speedComponent = new SpeedComponent(this, config.speed);
         this._directionComponent = new DirectionComponent(this);
         this._animationComponent = new AnimationComponent(this, config.animationConfig);
+        this._invulnerableComponent = new InvulnerableComponent(this, isInvulnerable || false, invulnerableAfterHitAnimationDuration);
  
 
         this._stateMachine = new StateMachine(id);

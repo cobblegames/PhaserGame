@@ -46,7 +46,8 @@ export class Spider extends CharacterGameObject
             isPlayer: false,
             animationConfig,
             speed: ENEMY_SPIDER_SPEED,
-            inputComponent: new InputComponent(), // Spiders don't use player controls
+            inputComponent: new InputComponent(),
+            isInvulnerable: false,
         });
 
         this._directionComponent.callback = (direction: Direction) => this.#handleDirectionChange(direction);
