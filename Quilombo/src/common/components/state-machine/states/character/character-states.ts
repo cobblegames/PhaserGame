@@ -1,5 +1,6 @@
 export const CHARACTER_STATES = {
     IDLE_STATE: 'IDLE_STATE', 
     MOVE_STATE: 'WALK_STATE',
+    BOUNCE_MOVE_STATE: 'BOUNCE_MOVE_STATE',
 
 } as const;

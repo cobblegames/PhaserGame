@@ -4,12 +4,14 @@ import { ASSET_KEYS } from '../common/assets';
 import { Player } from '../game-objects/player/player';
 import { KeyboardComponent } from '../common/components/input/keyboard-component';
 import { Spider } from '../common/components/game-object/enemies/spider';
+import { Wisp } from '../common/components/game-object/enemies/wisp';
 
 export class GameScene extends Phaser.Scene 
 {
   #controls!: KeyboardComponent;
   #player!: Player;
   #spider!: Spider;
+  #wisp!: Wisp;
 
 
   constructor() {
@@ -50,12 +52,25 @@ export class GameScene extends Phaser.Scene
     )
 
     this.#spider.setCollideWorldBounds(true);
+
+this.#wisp = new Wisp
+    (
+      {
+          scene: this,
+          position: {x: this.scale.width/2, y: this.scale.height/2-50},    
+      }
+    )
+
+    this.#wisp.setCollideWorldBounds(true);
+
+    
   }
 
   public update(): void 
   {
     
     this.#spider.update();
+    this.#wisp.update();
 
   }
 
