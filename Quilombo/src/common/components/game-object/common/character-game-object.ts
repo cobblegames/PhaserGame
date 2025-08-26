@@ -96,5 +96,15 @@ export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite
         this._stateMachine.update();
     }
 
+    public hit(direction : Direction): void
+    {
+        if(this._invulnerableComponent.invulnerable) return;
+
+        this._stateMachine.setState(CHARACTER_STATES.HURT_STATE, direction);
+
+     
+
+    }
+
     
 }
