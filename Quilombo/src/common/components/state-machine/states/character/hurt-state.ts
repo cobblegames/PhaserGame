@@ -4,6 +4,8 @@ import { exhaustiveGuard, isArcadePhysicsBody } from "../../../../utils";
 import { CharacterGameObject } from "../../../game-object/common/character-game-object";
 import { DIRECTION } from "../../../../common";
 import { Direction } from "../../../../types";
+import { HURT_PUSHBACK_DELAY } from "../../../../config";
+import { CHARACTER_ANIMATIONS } from "../../../../assets";
 
 
 export class HurtState extends BaseCharacterState
@@ -12,11 +14,13 @@ export class HurtState extends BaseCharacterState
     #hurtPushBackSpeed: number;
     #onHurtCallback: () => void;
     #nextState: string;
-    constructor(
+    constructor
+    (
         gameObject: CharacterGameObject, 
         hurtPushBackSpeed: number, 
         onHurtCallback: () => void = () => undefined, 
-        nextState: string = CHARACTER_STATES.IDLE_STATE)
+        nextState: string = CHARACTER_STATES.IDLE_STATE,
+    )
         {
             super(CHARACTER_STATES.HURT_STATE, gameObject);
 
@@ -25,13 +29,13 @@ export class HurtState extends BaseCharacterState
             this.#nextState = nextState;
         }
  
-    public onEnter(args: unknown[]): void
+    public onEnter(...args: unknown[]): void
     {
         const attackDirection = args[0] as Direction;
-        
-        const body = this._gameObject.body;
-      if(isArcadePhysicsBody(body))
+        if(isArcadePhysicsBody(this._gameObject.body))
        {
+
+            const body = this._gameObject.body;
             body.velocity.x = 0;
             body.velocity.y = 0;
 
@@ -53,7 +57,43 @@ export class HurtState extends BaseCharacterState
                         exhaustiveGuard(attackDirection);
                          
             }
+
+            this._gameObject.scene.time.delayedCall
+            (
+                HURT_PUSHBACK_DELAY, () => 
+                {
+                    body.velocity.x = 0;
+                    body.velocity.y = 0;
+                }
+            );
        }
+
+       this._gameObject.invulnerableComponent.invulnerable = true;
+       this.#onHurtCallback();
+
+       this._gameObject.animationComponent.playAnimation
+       (
+        CHARACTER_ANIMATIONS.HURT_DOWN, 
+        () => 
+            {
+                this.#transition();
+            }  
+        );
+    }
+
+    #transition() : void
+    {
+        this._gameObject.scene.time.delayedCall
+            (
+                this._gameObject.invulnerableComponent.invulnerableAfterHitAnimationDuration, 
+                () => 
+                    {
+                        this._gameObject.invulnerableComponent.invulnerable = false;
+                    
+                    },
+            );
+            
+        this._stateMachine.setState(this.#nextState);
     }
 
 }

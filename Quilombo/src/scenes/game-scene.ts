@@ -6,6 +6,7 @@ import { KeyboardComponent } from '../common/components/input/keyboard-component
 import { Spider } from '../common/components/game-object/enemies/spider';
 import { Wisp } from '../common/components/game-object/enemies/wisp';
 import { CharacterGameObject } from '../common/components/game-object/common/character-game-object';
+import { DIRECTION } from '../common/common';
 
 export class GameScene extends Phaser.Scene 
 {
@@ -81,6 +82,9 @@ constructor() {
 
       this.physics.add.collider(this.#player, this.#enemyGroup, (player, enemy) =>
         {
+          this.#player.hit(DIRECTION.DOWN);
+          const enemyGameObject = enemy as CharacterGameObject;
+          enemyGameObject.hit(this.#player.direction);
 
 
         }); 

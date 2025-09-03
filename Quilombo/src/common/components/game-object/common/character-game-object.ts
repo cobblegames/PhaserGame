@@ -86,6 +86,11 @@ export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite
         return this._animationComponent;
     }
 
+    get invulnerableComponent(): InvulnerableComponent
+    {
+        return this._invulnerableComponent;
+    }
+
     set direction(direction: Direction)
     {
         this._directionComponent.direction = direction;
@@ -101,9 +106,6 @@ export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite
         if(this._invulnerableComponent.invulnerable) return;
 
         this._stateMachine.setState(CHARACTER_STATES.HURT_STATE, direction);
-
-     
-
     }
 
     
