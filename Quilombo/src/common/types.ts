@@ -12,4 +12,4 @@ export type Position =
 
 export type GameObject = Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
 
-export type Direction = keyof typeof DIRECTION
+export type Direction = keyof typeof DIRECTION;

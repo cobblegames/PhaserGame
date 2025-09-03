@@ -29,7 +29,7 @@ export class HurtState extends BaseCharacterState
             this.#nextState = nextState;
         }
  
-    public onEnter(...args: unknown[]): void
+    public onEnter(args: unknown[]): void
     {
         const attackDirection = args[0] as Direction;
         if(isArcadePhysicsBody(this._gameObject.body))
