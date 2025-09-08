@@ -4,7 +4,7 @@ import { exhaustiveGuard, isArcadePhysicsBody } from "../../../../utils";
 import { CharacterGameObject } from "../../../game-object/common/character-game-object";
 import { DIRECTION } from "../../../../common";
 import { Direction } from "../../../../types";
-import { HURT_PUSHBACK_DELAY } from "../../../../config";
+import { PLAYER_HURT_PUSHBACK_DELAY } from "../../../../config";
 import { CHARACTER_ANIMATIONS } from "../../../../assets";
 
 
@@ -60,7 +60,7 @@ export class HurtState extends BaseCharacterState
 
             this._gameObject.scene.time.delayedCall
             (
-                HURT_PUSHBACK_DELAY, () => 
+                PLAYER_HURT_PUSHBACK_DELAY, () => 
                 {
                     body.velocity.x = 0;
                     body.velocity.y = 0;

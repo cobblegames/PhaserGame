@@ -8,6 +8,7 @@ import { Wisp } from '../common/components/game-object/enemies/wisp';
 import { CharacterGameObject } from '../common/components/game-object/common/character-game-object';
 import { DIRECTION } from '../common/common';
 import { Direction } from '../common/types';
+import { PLAYER_START_MAX_HEALTH } from '../common/config';
 
 export class GameScene extends Phaser.Scene 
 {
@@ -43,6 +44,8 @@ constructor() {
         scene: this,
         position: {x: this.scale.width/2, y: this.scale.height/2},
         controls: this.#controls,
+        maxLife: PLAYER_START_MAX_HEALTH,
+        currentLife: PLAYER_START_MAX_HEALTH,
       }
     );
 
@@ -83,12 +86,10 @@ constructor() {
 
       this.physics.add.collider(this.#player, this.#enemyGroup, (player, enemy) =>
         {
-          this.#player.hit(DIRECTION.DOWN);
+          this.#player.hit(DIRECTION.DOWN, 1);
           const enemyGameObject = enemy as CharacterGameObject;
        
-          enemyGameObject.hit(this.#player.direction);
-
-
+          enemyGameObject.hit(this.#player.direction,1);
         }); 
   }
 

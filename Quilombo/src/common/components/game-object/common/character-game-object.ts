@@ -151,7 +151,17 @@ export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite
         {
             this.visible = false;
         } 
-      
+    }
 
+    public enableObject(): void
+    {
+        if(this._isDefeated)
+        {
+            return;
+        }
+
+        (this.body as Phaser.Physics.Arcade.Body).enable = true;
+        this.active = true;
+        this.visible = true;
     }
 }

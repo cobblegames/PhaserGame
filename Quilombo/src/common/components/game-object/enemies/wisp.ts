@@ -4,7 +4,7 @@ import {  Position } from '../../../types';
 import { InputComponent } from '../../input/input-component';
 import { AnimationConfig } from '../animation-component';
 import { ASSET_KEYS, WISP_ANIMATION_KEYS } from '../../../assets';
-import { ENEMY_WISP_PULSE_ANIMATION_DURATION, ENEMY_WISP_PULSE_ANIMATION_SCALE_X, ENEMY_WISP_PULSE_ANIMATION_SCALE_Y, ENEMY_WISP_SPEED} from '../../../config';
+import { ENEMY_WISP_PULSE_ANIMATION_DURATION, ENEMY_WISP_PULSE_ANIMATION_SCALE_X, ENEMY_WISP_PULSE_ANIMATION_SCALE_Y, ENEMY_WISP_SPEED, ENEMY_WISP_START_MAX_HEALTH} from '../../../config';
 import { IdleState } from '../../state-machine/states/character/idle-state';
 import { MoveState } from '../../state-machine/states/character/move-state';
 import { CHARACTER_STATES } from '../../state-machine/states/character/character-states';
@@ -42,6 +42,8 @@ export class Wisp extends CharacterGameObject
             speed: ENEMY_WISP_SPEED,
             inputComponent: new InputComponent(), 
             isInvulnerable: true,
+            maxLife: ENEMY_WISP_START_MAX_HEALTH,
+            currentLife: ENEMY_WISP_START_MAX_HEALTH,
         });
 
  

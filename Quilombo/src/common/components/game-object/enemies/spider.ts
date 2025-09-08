@@ -4,7 +4,7 @@ import { Direction, Position } from '../../../types';
 import { InputComponent } from '../../input/input-component';
 import { AnimationConfig } from '../animation-component';
 import { ASSET_KEYS, SPIDER_ANIMATION_KEYS } from '../../../assets';
-import { ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, ENEMY_SPIDER_HURT_PUSHBACK_SPEED, ENEMY_SPIDER_SPEED} from '../../../config';
+import { ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, ENEMY_SPIDER_HURT_PUSHBACK_SPEED, ENEMY_SPIDER_SPEED, ENEMY_SPIDER_START_MAX_HEALTH} from '../../../config';
 import { IdleState } from '../../state-machine/states/character/idle-state';
 import { MoveState } from '../../state-machine/states/character/move-state';
 import { CHARACTER_STATES } from '../../state-machine/states/character/character-states';
@@ -56,6 +56,8 @@ export class Spider extends CharacterGameObject
             speed: ENEMY_SPIDER_SPEED,
             inputComponent: new InputComponent(),
             isInvulnerable: false,
+            maxLife: ENEMY_SPIDER_START_MAX_HEALTH,
+            currentLife: ENEMY_SPIDER_START_MAX_HEALTH
         });
 
         this._directionComponent.callback = (direction: Direction) => this.#handleDirectionChange(direction);

@@ -17,6 +17,8 @@ export type PlayerConfig =
     scene: Phaser.Scene;
     position: Position;
     controls: InputComponent;
+    maxLife: number;
+    currentLife: number;
 
 }
 
