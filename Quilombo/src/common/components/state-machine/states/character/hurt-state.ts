@@ -16,20 +16,19 @@ export class HurtState extends BaseCharacterState
     #nextState: string;
     constructor
     (
-        gameObject: CharacterGameObject, 
-        hurtPushBackSpeed: number, 
-        onHurtCallback: () => void = () => undefined, 
+        gameObject: CharacterGameObject,
+        hurtPushBackSpeed: number,
+        onHurtCallback: () => void = () => undefined,
         nextState: string = CHARACTER_STATES.IDLE_STATE,
-    )
-        {
-            super(CHARACTER_STATES.HURT_STATE, gameObject);
-
-            this.#hurtPushBackSpeed = hurtPushBackSpeed;
-            this.#onHurtCallback = onHurtCallback;
-            this.#nextState = nextState;
-        }
+    ) 
+    {
+        super(CHARACTER_STATES.HURT_STATE, gameObject);
+        this.#hurtPushBackSpeed = hurtPushBackSpeed;
+        this.#onHurtCallback = onHurtCallback;
+        this.#nextState = nextState;
+    }
  
-    public onEnter(args: unknown[]): void
+    public onEnter(args: unknown[]): void 
     {
         const attackDirection = args[0] as Direction;
         if(isArcadePhysicsBody(this._gameObject.body))

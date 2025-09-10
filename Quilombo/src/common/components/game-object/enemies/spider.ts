@@ -11,6 +11,7 @@ import { CHARACTER_STATES } from '../../state-machine/states/character/character
 import { DIRECTION } from '../../../common';
 import { exhaustiveGuard } from '../../../utils';
 import { HurtState } from '../../state-machine/states/character/hurt-state';
+import { DeathState } from '../../state-machine/states/character/death-state';
 export type SpiderConfig = 
 {
     scene: Phaser.Scene;
@@ -23,8 +24,8 @@ export class Spider extends CharacterGameObject
     {
 
         const animConfig = {key: SPIDER_ANIMATION_KEYS.WALK, repeat: -1, ignoreIfPlaying: true};
-
         const hurtAnimConfig = {key: SPIDER_ANIMATION_KEYS.HIT, repeat: 0, ignoreIfPlaying: true};
+        const deathAnimConfig = {key: SPIDER_ANIMATION_KEYS.DEATH, repeat: 0, ignoreIfPlaying: true};
         const animationConfig: AnimationConfig = 
         {
             WALK_DOWN: animConfig,
@@ -41,6 +42,12 @@ export class Spider extends CharacterGameObject
             HURT_UP: hurtAnimConfig,
             HURT_LEFT: hurtAnimConfig,
             HURT_RIGHT: hurtAnimConfig,
+
+            DIE_DOWN: deathAnimConfig,
+            DIE_UP: deathAnimConfig,
+            DIE_LEFT: deathAnimConfig,
+            DIE_RIGHT: deathAnimConfig,
+
 
         };
 
@@ -64,7 +71,8 @@ export class Spider extends CharacterGameObject
 
         this._stateMachine.addState(new IdleState(this));
         this._stateMachine.addState(new MoveState(this));
-        this._stateMachine.addState(new HurtState(this, ENEMY_SPIDER_HURT_PUSHBACK_SPEED));   
+        this._stateMachine.addState(new HurtState(this, ENEMY_SPIDER_HURT_PUSHBACK_SPEED));
+        this._stateMachine.addState(new DeathState(this));   
         this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
         this.scene.time.addEvent
