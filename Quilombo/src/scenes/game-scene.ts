@@ -9,6 +9,7 @@ import { CharacterGameObject } from '../common/components/game-object/common/cha
 import { DIRECTION } from '../common/common';
 import { Direction } from '../common/types';
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
+import { Pot } from '../common/components/game-object/objects/pot';
 
 export class GameScene extends Phaser.Scene 
 {
@@ -73,6 +74,13 @@ constructor() {
         }      
     );
     
+    new Pot
+    (
+      {
+        scene: this,
+        position: {x: this.scale.width/2+90, y: this.scale.height/2},
+      }
+    );
     this.#registerColliders();
   }
 
