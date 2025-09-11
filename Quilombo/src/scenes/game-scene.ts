@@ -6,17 +6,18 @@ import { KeyboardComponent } from '../common/components/input/keyboard-component
 import { Spider } from '../common/components/game-object/enemies/spider';
 import { Wisp } from '../common/components/game-object/enemies/wisp';
 import { CharacterGameObject } from '../common/components/game-object/common/character-game-object';
-import { DIRECTION } from '../common/common';
+import { CHEST_STATE, DIRECTION } from '../common/common';
 import { Direction } from '../common/types';
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
 import { Pot } from '../common/components/game-object/objects/pot';
+import { Chest } from '../common/components/game-object/objects/chest';
 
 export class GameScene extends Phaser.Scene 
 {
   #controls!: KeyboardComponent;
   #player!: Player;
   #enemyGroup!: Phaser.GameObjects.Group;
-
+  #blockingGroup!: Phaser.GameObjects.Group;
 
 constructor() {
     super({
@@ -73,14 +74,39 @@ constructor() {
           runChildUpdate: true,
         }      
     );
-    
-    new Pot
+  
+    this.#blockingGroup = this.add.group
     (
-      {
-        scene: this,
-        position: {x: this.scale.width/2+90, y: this.scale.height/2},
-      }
+      [
+        new Pot
+            (
+              {
+                scene: this,
+                position: {x: this.scale.width/2+90, y: this.scale.height/2},
+              }
+            ),
+        new Chest
+        (
+          {
+            scene: this,
+            position: {x: this.scale.width/2-90, y: this.scale.height/2},
+            requiresBossKey: false,
+          
+          }
+        ),
+        new Chest
+            (
+              {
+                scene: this,
+                position: {x: this.scale.width/2-90, y: this.scale.height/2 -80},
+                requiresBossKey: true,
+              
+              }
+            ),
+      ]
     );
+
+    
     this.#registerColliders();
   }
 
@@ -92,13 +118,16 @@ constructor() {
         enemyGameObject.setCollideWorldBounds(true);
       });
 
-      this.physics.add.collider(this.#player, this.#enemyGroup, (player, enemy) =>
+      this.physics.add.overlap(this.#player, this.#enemyGroup, (player, enemy) =>
         {
           this.#player.hit(DIRECTION.DOWN, 1);
           const enemyGameObject = enemy as CharacterGameObject;
        
           enemyGameObject.hit(this.#player.direction,1);
-        }); 
+        });
+        
+        this.physics.add.collider(this.#player, this.#blockingGroup, (player, gameObject) => {})
+        this.physics.add.collider(this.#enemyGroup,this.#blockingGroup,(enemy, gameObject) => {});
   }
 
   
