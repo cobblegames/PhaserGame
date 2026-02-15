@@ -24,7 +24,7 @@ export class PreloadScene extends Phaser.Scene {
       roomId: DataManager.instance.data.currentArea.startRoomId,
       doorId: DataManager.instance.data.currentArea.startDoorId,
     };
-    this.scene.start(SCENE_KEYS.GAME_SCENE, sceneData);
+    this.scene.start(SCENE_KEYS.START_SCENE, sceneData);
   }
 
   #createAnimations(): void {

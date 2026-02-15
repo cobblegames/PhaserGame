@@ -154,3 +154,9 @@ export const HEART_TEXTURE_FRAME = {
   EMPTY: '14',
   HALF: '12',
 } as const;
+
+export const GAME_LOGO = {
+  MAIN: 'logo-game.jpg',
+  
+};
+

@@ -88,6 +88,9 @@ export class GameScene extends Phaser.Scene {
     if (!this.input.keyboard) {
       console.warn('Phaser keyboard plugin is not setup properly.');
       return;
+
+ 
+
     }
     this.#controls = new KeyboardComponent(this.input.keyboard);
 

@@ -42,7 +42,7 @@ export class GameOverScene extends Phaser.Scene {
       if (this.#selectedMenuOptionIndex === 1) {
         // this option would be used to take the player back to the title screen for the game
         // instead of refreshing the current browser tab
-        window.location.reload();
+         this.scene.start(SCENE_KEYS.START_SCENE);
         return;
       }
 

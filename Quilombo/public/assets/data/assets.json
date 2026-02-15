@@ -39,6 +39,11 @@
         "key": "UI_ICONS",
         "url": "icons.png",
         "frameConfig": { "frameWidth": 16, "frameHeight": 16 }
+      },
+       {
+        "type": "image",
+        "key": "LOGO_GAME",
+        "url": "logo-game.jpg"
       }
     ]
   },

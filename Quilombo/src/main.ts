@@ -30,7 +30,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
 const game = new Phaser.Game(gameConfig);
 
 game.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene);
-game.scene.add(SCENE_KEYS.PRELOAD_SCENE, StartScene;
+game.scene.add(SCENE_KEYS.START_SCENE, StartScene);
 game.scene.add(SCENE_KEYS.GAME_SCENE, GameScene);
 game.scene.add(SCENE_KEYS.UI_SCENE, UiScene);
 game.scene.add(SCENE_KEYS.GAME_OVER_SCENE, GameOverScene);
