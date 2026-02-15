@@ -19,6 +19,8 @@ Aseprite – Sprite animations
 
 HTML5/CSS – Minimal for container
 
+Touch Controls – Virtual joystick and buttons for mobile support
+
 Project Structure
 text
 src/
@@ -27,14 +29,18 @@ src/
 ├── scenes/
 │   ├── preload-scene.ts        # Asset loading
 │   ├── start-scene.ts          # Main menu
+│   ├── options-scene.ts        # Options menu (touch controls toggle)
 │   ├── game-scene.ts           # Core gameplay
 │   ├── ui-scene.ts             # HUD (hearts, dialog)
+│   ├── touch-controls-scene.ts # Touch controls overlay
 │   └── game-over-scene.ts      # Death screen
 ├── objects/                    # Game objects (player, enemies, items)
 │   ├── player/
 │   ├── enemies/
 │   └── interactive/
 ├── components/                 # ECS-like components
+│   └── input/                  # Input components (keyboard, touch, combined)
+├── ui/                         # UI components (joystick, buttons)
 ├── state-machine/              # Custom state machine
 ├── data-manager.ts             # Singleton for game state
 ├── event-bus.ts                # Global event system
@@ -44,6 +50,11 @@ Component-Based (ECS-inspired)
 Entities composed of reusable components (e.g., AnimationComponent, DirectionComponent, SpeedComponent).
 
 Promotes flexibility and code reuse.
+
+Input Abstraction
+Abstract InputComponent base class allows multiple input sources (keyboard, touch, or combined).
+
+Player states read from InputComponent interface, completely decoupled from input method.
 
 State Machine
 Custom StateMachine class manages character states (Idle, Move, Attack, Hurt, etc.).
@@ -67,15 +78,17 @@ Enemy creation based on Tiled object types (spider, wisp, drow boss).
 
 Core Game Mechanics
 Player
-Movement: WASD/arrow keys, 80 px/s.
+Movement: WASD/arrow keys OR virtual joystick (touch), 80 px/s.
 
-Combat: Sword attack (directional) dealing 1 damage.
+Combat: Sword attack via Z key or touch button (directional) dealing 1 damage.
 
-Interaction: Lift and throw pots (damages enemies).
+Interaction: Lift and throw pots (damages enemies) via X key or touch button.
 
 Health: 6 HP (3 hearts), 1-second invulnerability after hit.
 
 States: Idle, Move, Attack, Lift, Throw, Hurt, Death.
+
+Input: Supports keyboard, touch, or both simultaneously via CombinedInputComponent.
 
 Enemies
 Spider: Random movement, 2 HP.
@@ -105,8 +118,14 @@ Hearts: Display player health (up to 20 hearts, two rows).
 
 Dialog Box: Shows messages (auto-closes after 3 seconds).
 
+Touch Controls (optional, enabled by default):
+- Virtual Joystick: Left side of screen (0-103px), dynamic (appears on touch), 8-directional
+- Attack Button: Bottom-right (224, 194), semi-transparent with "Z" label
+- Action Button: Bottom-right (186, 194), semi-transparent with "X" label
+- Toggle: Available in Options menu
+
 Progression
-Keys, boss key, and map status persist via DataManager.
+Keys, boss key, map status, and touch controls preference persist via DataManager.
 
 Note: No localStorage; progress lost on page refresh.
 
@@ -137,10 +156,17 @@ Class/Module	Responsibility
 GameScene	Main gameplay loop, room management, collisions.
 Player	Player entity with state machine and components.
 Enemy (base)	Abstract enemy with common behavior.
-DataManager	Singleton storing chests, doors, keys, health.
+DataManager	Singleton storing chests, doors, keys, health, touch preference.
 EventBus	Global event emitter/listener.
 StateMachine	Generic state machine for characters.
+InputComponent	Abstract base for all input types.
 KeyboardComponent	Wraps Phaser keyboard input.
+TouchComponent	Wraps touch input (joystick + buttons).
+CombinedInputComponent	Combines keyboard + touch input (OR logic).
+VirtualJoystick	Dynamic joystick with 8-directional input.
+TouchButton	Touch button with pressed state.
+TouchControlsScene	Manages touch UI and pointer events.
+OptionsScene	Settings menu for toggling touch controls.
 WeaponComponent	Handles weapon logic (currently sword).
 HeldGameObjectComponent	Tracks objects held by player.
 Development Guidelines
@@ -170,18 +196,22 @@ Place objects with correct types and custom properties.
 Add tilemap JSON to assets.json.
 
 Modifying UI
-UiScene handles HUD elements.
+UiScene handles HUD elements (hearts, dialog).
+
+TouchControlsScene handles touch controls overlay.
 
 Update health via EVENT_BUS.emit(CUSTOM_EVENTS.PLAYER_HEALTH_UPDATED, health).
 
 Show dialog via EVENT_BUS.emit(CUSTOM_EVENTS.SHOW_DIALOG, text).
 
+Toggle touch controls via EVENT_BUS.emit(CUSTOM_EVENTS.TOUCH_CONTROLS_TOGGLED, enabled).
+
 Known Issues & TODOs
 Data persistence: No localStorage; progress lost on refresh.
 
-Magic numbers: UI positions and timings scattered; should be moved to constants.
+Magic numbers: UI positions and timings scattered; should be moved to constants (partially addressed with TOUCH_* constants).
 
-Incomplete features: "Options" menu does nothing; health increase logic not implemented.
+Incomplete features: Health increase logic not implemented.
 
 Large methods: GameScene#create() and #registerColliders() need refactoring.
 
@@ -192,6 +222,8 @@ Asset key safety: Dynamic asset key strings may fail silently.
 Event cleanup: Some listeners not removed on scene shutdown (potential memory leaks).
 
 Commented code: Leftover code should be removed or implemented.
+
+Touch controls: Warning appears on startup about manual initialization (harmless but could be cleaned up).
 
 Performance Considerations
 Room-based rendering: Objects outside current room are disabled.
@@ -208,3 +240,12 @@ Development: npm start (likely uses webpack/vite)
 Production build: npm run build
 
 Assets: Located in public/assets/; referenced via assets.json.
+
+Touch Controls
+Default: Enabled (can be toggled in Options menu)
+
+Desktop: Keyboard + touch work simultaneously
+
+Mobile: Touch controls provide full gameplay capability
+
+Testing: Use Chrome DevTools mobile emulation or real mobile device
