@@ -3,6 +3,9 @@ import { SCENE_KEYS } from './scene-keys';
 import { ASSET_KEYS, CHEST_REWARD_TO_TEXTURE_FRAME } from '../common/assets';
 import { Player } from '../game-objects/player/player';
 import { KeyboardComponent } from '../components/input/keyboard-component';
+import { InputComponent } from '../components/input/input-component';
+import { CombinedInputComponent } from '../components/input/combined-input-component';
+import { TouchControlsScene } from './touch-controls-scene';
 import { Spider } from '../game-objects/enemies/spider';
 import { Wisp } from '../game-objects/enemies/wisp';
 import { CharacterGameObject } from '../game-objects/common/character-game-object';
@@ -46,7 +49,8 @@ import { Drow } from '../game-objects/enemies/boss/drow';
 
 export class GameScene extends Phaser.Scene {
   #levelData!: LevelData;
-  #controls!: KeyboardComponent;
+  #controls!: InputComponent;
+  #keyboardComponent!: KeyboardComponent;
   #player!: Player;
   #blockingGroup!: Phaser.GameObjects.Group;
   #objectsByRoomId!: {
@@ -89,10 +93,25 @@ export class GameScene extends Phaser.Scene {
       console.warn('Phaser keyboard plugin is not setup properly.');
       return;
 
- 
+
 
     }
-    this.#controls = new KeyboardComponent(this.input.keyboard);
+
+    // Always create keyboard controls
+    this.#keyboardComponent = new KeyboardComponent(this.input.keyboard);
+
+    // Check if touch controls are enabled
+    const touchEnabled = DataManager.instance.touchControlsEnabled;
+    if (touchEnabled) {
+      // Launch touch controls scene and combine with keyboard
+      this.scene.launch(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      const touchScene = this.scene.get(SCENE_KEYS.TOUCH_CONTROLS_SCENE) as TouchControlsScene;
+      const touchComponent = touchScene.getTouchComponent();
+      this.#controls = new CombinedInputComponent(this.#keyboardComponent, touchComponent);
+    } else {
+      // Use keyboard controls only
+      this.#controls = this.#keyboardComponent;
+    }
 
     this.#createLevel();
     if (this.#collisionLayer === undefined || this.#enemyCollisionLayer === undefined) {
@@ -265,6 +284,7 @@ export class GameScene extends Phaser.Scene {
     EVENT_BUS.on(CUSTOM_EVENTS.PLAYER_DEFEATED, this.#handlePlayerDefeatedEvent, this);
     EVENT_BUS.on(CUSTOM_EVENTS.DIALOG_CLOSED, this.#handleDialogClosed, this);
     EVENT_BUS.on(CUSTOM_EVENTS.BOSS_DEFEATED, this.#handleBossDefeated, this);
+    EVENT_BUS.on(CUSTOM_EVENTS.TOUCH_CONTROLS_TOGGLED, this.#handleTouchControlsToggled, this);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       EVENT_BUS.off(CUSTOM_EVENTS.OPENED_CHEST, this.#handleOpenChest, this);
@@ -272,6 +292,7 @@ export class GameScene extends Phaser.Scene {
       EVENT_BUS.off(CUSTOM_EVENTS.PLAYER_DEFEATED, this.#handlePlayerDefeatedEvent, this);
       EVENT_BUS.off(CUSTOM_EVENTS.DIALOG_CLOSED, this.#handleDialogClosed, this);
       EVENT_BUS.off(CUSTOM_EVENTS.BOSS_DEFEATED, this.#handleBossDefeated, this);
+      EVENT_BUS.off(CUSTOM_EVENTS.TOUCH_CONTROLS_TOGGLED, this.#handleTouchControlsToggled, this);
     });
   }
 
@@ -776,5 +797,37 @@ export class GameScene extends Phaser.Scene {
   #handleBossDefeated(): void {
     DataManager.instance.defeatedCurrentAreaBoss();
     this.#handleAllEnemiesDefeated();
+  }
+
+  #handleTouchControlsToggled(enabled: boolean): void {
+    if (!this.input.keyboard) {
+      return;
+    }
+
+    // Reset current controls
+    this.#controls.reset();
+
+    if (enabled) {
+      // Enable touch controls - combine with keyboard
+      // Check if touch controls scene is already running
+      const touchScene = this.scene.get(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      if (!touchScene || !this.scene.isActive(SCENE_KEYS.TOUCH_CONTROLS_SCENE)) {
+        this.scene.launch(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      }
+      const touchControlsScene = this.scene.get(SCENE_KEYS.TOUCH_CONTROLS_SCENE) as TouchControlsScene;
+      const touchComponent = touchControlsScene.getTouchComponent();
+      this.#controls = new CombinedInputComponent(this.#keyboardComponent, touchComponent);
+    } else {
+      // Disable touch controls - use keyboard only
+      this.#controls = this.#keyboardComponent;
+
+      // Stop touch controls scene if running
+      if (this.scene.isActive(SCENE_KEYS.TOUCH_CONTROLS_SCENE)) {
+        this.scene.stop(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      }
+    }
+
+    // Update player's controls reference
+    this.#player.controls = this.#controls;
   }
 }

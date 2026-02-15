@@ -62,9 +62,9 @@ export class StartScene extends Phaser.Scene {
           
 
           case 1:
-            console.log('Options not implemented yet');
-         //   window.location.reload();
-          return;
+            // Launch options scene
+            this.scene.start(SCENE_KEYS.OPTIONS_SCENE);
+            return;
 
         }            
       }

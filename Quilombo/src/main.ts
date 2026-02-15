@@ -5,6 +5,8 @@ import { GameScene } from './scenes/game-scene';
 import { UiScene } from './scenes/ui-scene';
 import { GameOverScene } from './scenes/game-over-scene';
 import { StartScene } from './scenes/start-scene';
+import { OptionsScene } from './scenes/options-scene';
+import { TouchControlsScene } from './scenes/touch-controls-scene';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
@@ -31,7 +33,9 @@ const game = new Phaser.Game(gameConfig);
 
 game.scene.add(SCENE_KEYS.PRELOAD_SCENE, PreloadScene);
 game.scene.add(SCENE_KEYS.START_SCENE, StartScene);
+game.scene.add(SCENE_KEYS.OPTIONS_SCENE, OptionsScene);
 game.scene.add(SCENE_KEYS.GAME_SCENE, GameScene);
 game.scene.add(SCENE_KEYS.UI_SCENE, UiScene);
+game.scene.add(SCENE_KEYS.TOUCH_CONTROLS_SCENE, TouchControlsScene);
 game.scene.add(SCENE_KEYS.GAME_OVER_SCENE, GameOverScene);
 game.scene.start(SCENE_KEYS.PRELOAD_SCENE);

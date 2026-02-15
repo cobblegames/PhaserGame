@@ -13,4 +13,8 @@ export class ControlsComponent extends BaseGameObjectComponent {
   get controls(): InputComponent {
     return this.#inputComponent;
   }
+
+  set controls(inputComponent: InputComponent) {
+    this.#inputComponent = inputComponent;
+  }
 }

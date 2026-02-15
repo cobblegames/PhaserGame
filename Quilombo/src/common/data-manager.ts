@@ -12,6 +12,7 @@ import { LevelName } from './types';
 export type PlayerData = {
   currentHealth: number;
   maxHealth: number;
+  touchControlsEnabled: boolean;
   currentArea: {
     name: LevelName;
     startRoomId: number;
@@ -46,6 +47,7 @@ export class DataManager {
     this.#data = {
       currentHealth: PLAYER_START_MAX_HEALTH,
       maxHealth: PLAYER_START_MAX_HEALTH,
+      touchControlsEnabled: true,
       currentArea: {
         name: LEVEL_NAME.DUNGEON_1,
         startRoomId: 3,
@@ -121,6 +123,14 @@ export class DataManager {
 
   public defeatedCurrentAreaBoss(): void {
     this.#data.areaDetails[this.#data.currentArea.name].bossDefeated = true;
+  }
+
+  public get touchControlsEnabled(): boolean {
+    return this.#data.touchControlsEnabled;
+  }
+
+  public set touchControlsEnabled(enabled: boolean) {
+    this.#data.touchControlsEnabled = enabled;
   }
 
   #populateDefaultRoomData(roomId: number): void {

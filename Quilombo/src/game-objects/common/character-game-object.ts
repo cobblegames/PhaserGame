@@ -97,6 +97,10 @@ export abstract class CharacterGameObject extends Phaser.Physics.Arcade.Sprite i
     return this._controlsComponent.controls;
   }
 
+  set controls(inputComponent: InputComponent) {
+    this._controlsComponent.controls = inputComponent;
+  }
+
   get speed(): number {
     return this._speedComponent.speed;
   }
