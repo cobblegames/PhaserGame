@@ -5,7 +5,7 @@ Quilombo is a top-down action-adventure game inspired by classic Zelda titles, b
 Genre: 2D Action-Adventure
 Engine: Phaser 3 (WebGL)
 Language: TypeScript
-Resolution: 256x224 (pixel art)
+Resolution: 256x224 native (pixel art, responsive scaling)
 Physics: Arcade Physics (zero gravity)
 
 Tech Stack
@@ -17,9 +17,35 @@ Tiled – Level editor (JSON tilemaps)
 
 Aseprite – Sprite animations
 
-HTML5/CSS – Minimal for container
+HTML5/CSS – Responsive container with mobile-optimized viewport
 
 Touch Controls – Virtual joystick and buttons for mobile support
+
+Responsive Design
+The game uses a fixed internal resolution of 256x224 pixels but scales responsively to fit any screen size:
+
+Scale Mode: Phaser.Scale.FIT
+- Automatically scales the game to fit within available screen space
+- Maintains the 256x224 aspect ratio (no stretching)
+- Adds letterboxing (black bars) when screen ratio doesn't match
+- Works seamlessly on desktop, tablet, and mobile devices
+
+Mobile Viewport Handling:
+- Uses position: fixed and 100% dimensions to avoid mobile browser UI issues
+- Prevents zoom/pinch with user-scalable=no
+- expandParent: false prevents overflow on landscape mobile screens
+- Flexbox centering ensures proper canvas placement
+- max-width/max-height constraints prevent viewport overflow
+
+Configuration (main.ts):
+- mode: Phaser.Scale.FIT
+- autoCenter: Phaser.Scale.CENTER_BOTH
+- expandParent: false
+- fullscreenTarget: 'game-container'
+- pixelArt: true (crisp pixel rendering)
+- input.activePointers: 4 (enables multi-touch for joystick + buttons)
+
+The game canvas will always fit within the browser window, regardless of device orientation or screen size.
 
 Project Structure
 text
@@ -130,6 +156,7 @@ Touch Controls (optional, enabled by default):
 - Attack Button: Bottom-right (224, 194), semi-transparent with "Z" label
 - Action Button: Bottom-right (186, 194), semi-transparent with "X" label
 - Toggle: Available in Options menu
+- Multi-touch enabled: Joystick and buttons can be used simultaneously
 
 Progression
 Keys, boss key, map status, and touch controls preference persist via DataManager.
@@ -172,7 +199,7 @@ TouchComponent	Wraps touch input (joystick + buttons).
 CombinedInputComponent	Combines keyboard + touch input (OR logic).
 VirtualJoystick	Dynamic joystick with 8-directional input.
 TouchButton	Touch button with pressed state.
-TouchControlsScene	Manages touch UI and pointer events.
+TouchControlsScene	Manages touch UI and multi-touch pointer events (tracks up to 4 simultaneous touches).
 StartScene	Main menu with keyboard and touch/mouse interactive menu items.
 OptionsScene	Settings menu for toggling touch controls with interactive menu items.
 WeaponComponent	Handles weapon logic (currently sword).
@@ -227,6 +254,19 @@ Extract menu actions into separate methods for reusability.
 
 Ensure cursor updates on hover to sync with keyboard navigation.
 
+Working with Multi-Touch
+Phaser is configured with activePointers: 4 in main.ts to support multiple simultaneous touches.
+
+TouchControlsScene uses an activePointers Map to track which pointer controls which zone.
+
+Each touch control (VirtualJoystick, TouchButton) stores its associated pointerId.
+
+Pointer event handlers check pointer.id to ensure they update the correct control.
+
+Always verify pointer ownership before updating control state (e.g., if (this.#joystick.pointerId === pointer.id)).
+
+When adding new touch controls, register them in the appropriate pointer zone in TouchControlsScene.
+
 Known Issues & TODOs
 Data persistence: No localStorage; progress lost on refresh.
 
@@ -244,8 +284,6 @@ Event cleanup: Some listeners not removed on scene shutdown (potential memory le
 
 Commented code: Leftover code should be removed or implemented.
 
-Touch controls: Warning appears on startup about manual initialization (harmless but could be cleaned up).
-
 Performance Considerations
 Room-based rendering: Objects outside current room are disabled.
 
@@ -262,12 +300,33 @@ Production build: npm run build
 
 Assets: Located in public/assets/; referenced via assets.json.
 
-Touch Controls
+Deployment:
+- Game is fully responsive and mobile-ready out of the box
+- No special server configuration required
+- Ensure index.html includes proper viewport meta tags (already configured)
+- Test on multiple devices and orientations before deployment
+- Works on any static web hosting (GitHub Pages, Netlify, Vercel, etc.)
+
+Touch Controls & Mobile Support
 Default: Enabled (can be toggled in Options menu)
 
 Desktop: Keyboard + mouse/touch work simultaneously
 
 Mobile: Touch controls provide full gameplay capability
+
+Multi-Touch Support:
+- Phaser configured with activePointers: 4 to track up to 4 simultaneous touches
+- Enables joystick movement while pressing attack/action buttons simultaneously
+- TouchControlsScene tracks each pointer by ID using activePointers Map
+- Each control (joystick, attack button, action button) stores its associated pointerId
+- Pointer events (pointerdown, pointermove, pointerup) handle multiple touches independently
+- Players can move (joystick) and attack/interact (buttons) at the same time
+
+Screen Fitting:
+- Game automatically scales to fit any screen size (portrait or landscape)
+- Responsive design ensures no overflow or cut-off content
+- Optimized for mobile browser viewport handling
+- Works correctly with or without browser UI (address bar, navigation)
 
 Menu Navigation:
 - Both Start Scene and Options Scene support direct touch/click on menu items
@@ -275,4 +334,8 @@ Menu Navigation:
 - Keyboard navigation (arrow keys + action keys) still fully functional
 - All menu interactions work on both desktop and mobile
 
-Testing: Use Chrome DevTools mobile emulation or real mobile device
+Testing:
+- Use Chrome DevTools mobile emulation or real mobile device
+- Test both portrait and landscape orientations
+- Verify game fits within viewport without scrolling or overflow
+- Test multi-touch by moving joystick while pressing Z/X buttons
