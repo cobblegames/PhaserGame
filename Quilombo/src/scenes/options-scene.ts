@@ -12,6 +12,7 @@ export class OptionsScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
   #selectedMenuOptionIndex!: number;
   #touchControlsText!: Phaser.GameObjects.Text;
+  #backText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({
@@ -41,14 +42,64 @@ export class OptionsScene extends Phaser.Scene {
     this.#menuContainer.add(this.#touchControlsText);
 
     // Back button
-    this.#menuContainer.add(this.add.text(32, 32, 'Back', DEFAULT_UI_TEXT_STYLE).setOrigin(0));
+    this.#backText = this.add.text(32, 32, 'Back', DEFAULT_UI_TEXT_STYLE).setOrigin(0);
+    this.#menuContainer.add(this.#backText);
 
     // Cursor
     this.#cursorGameObject = this.add.image(20, 14, ASSET_KEYS.UI_CURSOR, 0).setOrigin(0);
     this.#menuContainer.add(this.#cursorGameObject);
 
+    // Setup touch controls for menu items
+    this.#setupTouchControls();
+
     this.#controls = new KeyboardComponent(this.input.keyboard);
     this.#selectedMenuOptionIndex = 0;
+  }
+
+  #setupTouchControls(): void {
+    // Make text items interactive
+    this.#touchControlsText.setInteractive({ useHandCursor: true });
+    this.#backText.setInteractive({ useHandCursor: true });
+
+    // Add hover effects
+    this.#touchControlsText.on('pointerover', () => {
+      this.#selectedMenuOptionIndex = 0;
+      this.#cursorGameObject.setY(14);
+      this.#touchControlsText.setAlpha(0.8);
+    });
+    this.#touchControlsText.on('pointerout', () => {
+      this.#touchControlsText.setAlpha(1);
+    });
+
+    this.#backText.on('pointerover', () => {
+      this.#selectedMenuOptionIndex = 1;
+      this.#cursorGameObject.setY(30);
+      this.#backText.setAlpha(0.8);
+    });
+    this.#backText.on('pointerout', () => {
+      this.#backText.setAlpha(1);
+    });
+
+    // Add click/tap handlers
+    this.#touchControlsText.on('pointerdown', () => {
+      this.#touchControlsText.setAlpha(0.6);
+    });
+    this.#touchControlsText.on('pointerup', () => {
+      this.#touchControlsText.setAlpha(1);
+      this.#toggleTouchControls();
+    });
+
+    this.#backText.on('pointerdown', () => {
+      this.#backText.setAlpha(0.6);
+    });
+    this.#backText.on('pointerup', () => {
+      this.#backText.setAlpha(1);
+      this.#goBack();
+    });
+  }
+
+  #goBack(): void {
+    this.scene.start(SCENE_KEYS.START_SCENE);
   }
 
   public update(): void {
@@ -66,7 +117,7 @@ export class OptionsScene extends Phaser.Scene {
 
         case 1:
           // Back to start menu
-          this.scene.start(SCENE_KEYS.START_SCENE);
+          this.#goBack();
           return;
       }
     }
