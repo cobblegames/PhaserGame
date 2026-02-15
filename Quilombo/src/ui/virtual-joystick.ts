@@ -95,10 +95,11 @@ export class VirtualJoystick {
     const normalizedDegrees = degrees < 0 ? degrees + 360 : degrees;
 
     // 8-directional input based on angle sectors
-    const up = normalizedDegrees >= 45 && normalizedDegrees <= 135;
-    const down = normalizedDegrees >= 225 && normalizedDegrees <= 315;
-    const right = normalizedDegrees <= 45 || normalizedDegrees >= 315;
-    const left = normalizedDegrees >= 135 && normalizedDegrees <= 225;
+    // In screen coordinates: 0°=right, 90°=down, 180°=left, 270°=up
+    const up = normalizedDegrees >= 225 && normalizedDegrees <= 315;    // 270° ± 45°
+    const down = normalizedDegrees >= 45 && normalizedDegrees <= 135;   // 90° ± 45°
+    const right = normalizedDegrees <= 45 || normalizedDegrees >= 315;  // 0° ± 45°
+    const left = normalizedDegrees >= 135 && normalizedDegrees <= 225;  // 180° ± 45°
 
     return { up, down, left, right };
   }

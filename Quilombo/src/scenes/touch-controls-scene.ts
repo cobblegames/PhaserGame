@@ -14,35 +14,44 @@ export class TouchControlsScene extends Phaser.Scene {
   #actionButton!: TouchButton;
   #touchComponent!: TouchComponent;
   #activePointers: Map<number, PointerZone> = new Map();
+  #pointersSetup: boolean = false;
 
   constructor() {
     super({ key: SCENE_KEYS.TOUCH_CONTROLS_SCENE });
   }
 
   create(): void {
-    // Create joystick
-    this.#joystick = new VirtualJoystick(this);
+    // Create joystick (only if not already created by lazy init)
+    if (!this.#joystick) {
+      this.#joystick = new VirtualJoystick(this);
+    }
 
-    // Create attack button
-    this.#attackButton = new TouchButton(
-      this,
-      CONFIG.TOUCH_BUTTON_ATTACK_X,
-      CONFIG.TOUCH_BUTTON_ATTACK_Y,
-      'Z',
-      CONFIG.TOUCH_BUTTON_RADIUS,
-    );
+    // Create attack button (only if not already created)
+    if (!this.#attackButton) {
+      this.#attackButton = new TouchButton(
+        this,
+        CONFIG.TOUCH_BUTTON_ATTACK_X,
+        CONFIG.TOUCH_BUTTON_ATTACK_Y,
+        'Z',
+        CONFIG.TOUCH_BUTTON_RADIUS,
+      );
+    }
 
-    // Create action button
-    this.#actionButton = new TouchButton(
-      this,
-      CONFIG.TOUCH_BUTTON_ACTION_X,
-      CONFIG.TOUCH_BUTTON_ACTION_Y,
-      'X',
-      CONFIG.TOUCH_BUTTON_RADIUS,
-    );
+    // Create action button (only if not already created)
+    if (!this.#actionButton) {
+      this.#actionButton = new TouchButton(
+        this,
+        CONFIG.TOUCH_BUTTON_ACTION_X,
+        CONFIG.TOUCH_BUTTON_ACTION_Y,
+        'X',
+        CONFIG.TOUCH_BUTTON_RADIUS,
+      );
+    }
 
-    // Create touch component
-    this.#touchComponent = new TouchComponent(this.#joystick, this.#attackButton, this.#actionButton);
+    // Create touch component (only if not already created)
+    if (!this.#touchComponent) {
+      this.#touchComponent = new TouchComponent(this.#joystick, this.#attackButton, this.#actionButton);
+    }
 
     // Setup pointer handlers
     this.#setupPointerHandlers();
@@ -53,44 +62,38 @@ export class TouchControlsScene extends Phaser.Scene {
     // Cleanup on scene shutdown
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       EVENT_BUS.off(CUSTOM_EVENTS.TOUCH_CONTROLS_TOGGLED, this.#onTouchControlsToggled, this);
-      this.#joystick.destroy();
-      this.#attackButton.destroy();
-      this.#actionButton.destroy();
+      this.#joystick?.destroy();
+      this.#attackButton?.destroy();
+      this.#actionButton?.destroy();
     });
   }
 
   public getTouchComponent(): TouchComponent {
     if (!this.#touchComponent) {
-      console.warn('TouchComponent not yet initialized in TouchControlsScene');
-      // Create a temporary one if needed (this shouldn't happen in normal flow)
-      this.#joystick = this.#joystick || new VirtualJoystick(this);
-      this.#attackButton =
-        this.#attackButton ||
-        new TouchButton(
-          this,
-          CONFIG.TOUCH_BUTTON_ATTACK_X,
-          CONFIG.TOUCH_BUTTON_ATTACK_Y,
-          'Z',
-          CONFIG.TOUCH_BUTTON_RADIUS,
-        );
-      this.#actionButton =
-        this.#actionButton ||
-        new TouchButton(
-          this,
-          CONFIG.TOUCH_BUTTON_ACTION_X,
-          CONFIG.TOUCH_BUTTON_ACTION_Y,
-          'X',
-          CONFIG.TOUCH_BUTTON_RADIUS,
-        );
-      this.#touchComponent = new TouchComponent(this.#joystick, this.#attackButton, this.#actionButton);
+      console.warn('TouchComponent not yet initialized - calling create() manually');
+      // If create() hasn't been called yet, call it now
+      // This ensures all components and handlers are properly set up
+      this.create();
     }
     return this.#touchComponent;
   }
 
   #setupPointerHandlers(): void {
+    // Only set up once to avoid duplicate handlers
+    if (this.#pointersSetup) {
+      return;
+    }
+
+    // Make sure input system is available
+    if (!this.input) {
+      console.warn('Input system not ready, cannot setup pointer handlers');
+      return;
+    }
+
     this.input.on('pointerdown', this.#onPointerDown, this);
     this.input.on('pointermove', this.#onPointerMove, this);
     this.input.on('pointerup', this.#onPointerUp, this);
+    this.#pointersSetup = true;
   }
 
   #onPointerDown(pointer: Phaser.Input.Pointer): void {
