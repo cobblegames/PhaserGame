@@ -118,6 +118,13 @@ Hearts: Display player health (up to 20 hearts, two rows).
 
 Dialog Box: Shows messages (auto-closes after 3 seconds).
 
+Menu Controls (Start Scene & Options Scene):
+- Menu items are fully interactive via touch/mouse click
+- Hover effects: Items dim to 80% alpha when hovered
+- Press effects: Items dim to 60% alpha when pressed
+- Cursor auto-follows hovered items
+- Works seamlessly alongside keyboard navigation
+
 Touch Controls (optional, enabled by default):
 - Virtual Joystick: Left side of screen (0-103px), dynamic (appears on touch), 8-directional
 - Attack Button: Bottom-right (224, 194), semi-transparent with "Z" label
@@ -166,7 +173,8 @@ CombinedInputComponent	Combines keyboard + touch input (OR logic).
 VirtualJoystick	Dynamic joystick with 8-directional input.
 TouchButton	Touch button with pressed state.
 TouchControlsScene	Manages touch UI and pointer events.
-OptionsScene	Settings menu for toggling touch controls.
+StartScene	Main menu with keyboard and touch/mouse interactive menu items.
+OptionsScene	Settings menu for toggling touch controls with interactive menu items.
 WeaponComponent	Handles weapon logic (currently sword).
 HeldGameObjectComponent	Tracks objects held by player.
 Development Guidelines
@@ -206,6 +214,19 @@ Show dialog via EVENT_BUS.emit(CUSTOM_EVENTS.SHOW_DIALOG, text).
 
 Toggle touch controls via EVENT_BUS.emit(CUSTOM_EVENTS.TOUCH_CONTROLS_TOGGLED, enabled).
 
+Adding Touch Controls to Menu Scenes
+Store menu text items as class properties for interaction.
+
+Make items interactive via setInteractive({ useHandCursor: true }).
+
+Add pointerover/pointerout handlers for hover effects (e.g., setAlpha(0.8)).
+
+Add pointerdown/pointerup handlers for press feedback and action triggers.
+
+Extract menu actions into separate methods for reusability.
+
+Ensure cursor updates on hover to sync with keyboard navigation.
+
 Known Issues & TODOs
 Data persistence: No localStorage; progress lost on refresh.
 
@@ -244,8 +265,14 @@ Assets: Located in public/assets/; referenced via assets.json.
 Touch Controls
 Default: Enabled (can be toggled in Options menu)
 
-Desktop: Keyboard + touch work simultaneously
+Desktop: Keyboard + mouse/touch work simultaneously
 
 Mobile: Touch controls provide full gameplay capability
+
+Menu Navigation:
+- Both Start Scene and Options Scene support direct touch/click on menu items
+- Visual feedback on hover and press
+- Keyboard navigation (arrow keys + action keys) still fully functional
+- All menu interactions work on both desktop and mobile
 
 Testing: Use Chrome DevTools mobile emulation or real mobile device
