@@ -144,12 +144,13 @@ Hearts: Display player health (up to 20 hearts, two rows).
 
 Dialog Box: Shows messages (auto-closes after 3 seconds).
 
-Menu Controls (Start Scene & Options Scene):
+Menu Controls (Start Scene, Options Scene & Game Over Scene):
 - Menu items are fully interactive via touch/mouse click
 - Hover effects: Items dim to 80% alpha when hovered
 - Press effects: Items dim to 60% alpha when pressed
 - Cursor auto-follows hovered items
 - Works seamlessly alongside keyboard navigation
+- Game Over Scene properly hides touch controls and restarts game with correct data
 
 Touch Controls (optional, enabled by default):
 - Virtual Joystick: Left side of screen (0-103px), dynamic (appears on touch), 8-directional
@@ -199,9 +200,10 @@ TouchComponent	Wraps touch input (joystick + buttons).
 CombinedInputComponent	Combines keyboard + touch input (OR logic).
 VirtualJoystick	Dynamic joystick with 8-directional input.
 TouchButton	Touch button with pressed state.
-TouchControlsScene	Manages touch UI and multi-touch pointer events (tracks up to 4 simultaneous touches).
+TouchControlsScene	Manages touch UI and multi-touch pointer events (tracks up to 4 simultaneous touches). Properly clears all references on shutdown for clean restarts.
 StartScene	Main menu with keyboard and touch/mouse interactive menu items.
 OptionsScene	Settings menu for toggling touch controls with interactive menu items.
+GameOverScene	Death screen with keyboard and touch/mouse interactive menu items. Passes LevelData when continuing.
 WeaponComponent	Handles weapon logic (currently sword).
 HeldGameObjectComponent	Tracks objects held by player.
 Development Guidelines
@@ -242,17 +244,21 @@ Show dialog via EVENT_BUS.emit(CUSTOM_EVENTS.SHOW_DIALOG, text).
 Toggle touch controls via EVENT_BUS.emit(CUSTOM_EVENTS.TOUCH_CONTROLS_TOGGLED, enabled).
 
 Adding Touch Controls to Menu Scenes
+All menu scenes (StartScene, OptionsScene, GameOverScene) follow this pattern:
+
 Store menu text items as class properties for interaction.
 
 Make items interactive via setInteractive({ useHandCursor: true }).
 
 Add pointerover/pointerout handlers for hover effects (e.g., setAlpha(0.8)).
 
-Add pointerdown/pointerup handlers for press feedback and action triggers.
+Add pointerdown/pointerup handlers for press feedback (e.g., setAlpha(0.6)) and action triggers.
 
-Extract menu actions into separate methods for reusability.
+Extract menu actions into separate methods for reusability (e.g., #startGame(), #continueGame()).
 
 Ensure cursor updates on hover to sync with keyboard navigation.
+
+Pass required scene data (LevelData) when transitioning to GameScene.
 
 Working with Multi-Touch
 Phaser is configured with activePointers: 4 in main.ts to support multiple simultaneous touches.
@@ -266,6 +272,54 @@ Pointer event handlers check pointer.id to ensure they update the correct contro
 Always verify pointer ownership before updating control state (e.g., if (this.#joystick.pointerId === pointer.id)).
 
 When adding new touch controls, register them in the appropriate pointer zone in TouchControlsScene.
+
+Scene Lifecycle Management
+Phaser scenes can run in parallel when launched with scene.launch().
+
+When transitioning between major game states (e.g., GameScene to GameOverScene), stop parallel scenes to prevent UI overlap.
+
+Pattern for stopping parallel scenes before transition:
+if (this.scene.isActive(SCENE_KEYS.TOUCH_CONTROLS_SCENE)) {
+  this.scene.stop(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+}
+if (this.scene.isActive(SCENE_KEYS.UI_SCENE)) {
+  this.scene.stop(SCENE_KEYS.UI_SCENE);
+}
+this.scene.start(SCENE_KEYS.TARGET_SCENE);
+
+When launching scenes that may already be running, always check if they're active first:
+if (!this.scene.isActive(SCENE_KEYS.SOME_SCENE)) {
+  this.scene.launch(SCENE_KEYS.SOME_SCENE);
+}
+
+When starting a scene that requires initialization data, always pass LevelData or equivalent:
+const sceneData: LevelData = {
+  level: DataManager.instance.data.currentArea.name,
+  roomId: DataManager.instance.data.currentArea.startRoomId,
+  doorId: DataManager.instance.data.currentArea.startDoorId,
+};
+this.scene.start(SCENE_KEYS.GAME_SCENE, sceneData);
+
+Scene Shutdown Cleanup Pattern
+When a scene can be stopped and restarted, ensure proper cleanup in SHUTDOWN event:
+
+Clear all object references after destroying them (set to null).
+
+Clear any Maps or collections (activePointers, etc.).
+
+Reset boolean flags (pointersSetup, etc.).
+
+Remove event listeners.
+
+Example from TouchControlsScene:
+this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+  this.#joystick?.destroy();
+  this.#joystick = null as any;
+  this.#activePointers.clear();
+  this.#pointersSetup = false;
+});
+
+This ensures that when create() is called again after restart, all objects are recreated fresh.
 
 Known Issues & TODOs
 Data persistence: No localStorage; progress lost on refresh.
@@ -329,9 +383,10 @@ Screen Fitting:
 - Works correctly with or without browser UI (address bar, navigation)
 
 Menu Navigation:
-- Both Start Scene and Options Scene support direct touch/click on menu items
-- Visual feedback on hover and press
+- Start Scene, Options Scene, and Game Over Scene support direct touch/click on menu items
+- Visual feedback on hover and press (hover: 80% alpha, press: 60% alpha)
 - Keyboard navigation (arrow keys + action keys) still fully functional
+- Cursor auto-follows hovered items
 - All menu interactions work on both desktop and mobile
 
 Testing:

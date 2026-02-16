@@ -65,6 +65,13 @@ export class TouchControlsScene extends Phaser.Scene {
       this.#joystick?.destroy();
       this.#attackButton?.destroy();
       this.#actionButton?.destroy();
+      // Clear references so they can be recreated on restart
+      this.#joystick = null as any;
+      this.#attackButton = null as any;
+      this.#actionButton = null as any;
+      this.#touchComponent = null as any;
+      this.#activePointers.clear();
+      this.#pointersSetup = false;
     });
   }
 

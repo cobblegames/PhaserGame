@@ -104,13 +104,21 @@ export class GameScene extends Phaser.Scene {
     const touchEnabled = DataManager.instance.touchControlsEnabled;
     if (touchEnabled) {
       // Launch touch controls scene and combine with keyboard
-      this.scene.launch(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
-      const touchScene = this.scene.get(SCENE_KEYS.TOUCH_CONTROLS_SCENE) as TouchControlsScene;
-      const touchComponent = touchScene.getTouchComponent();
+      // Check if touch controls scene is already running
+      const touchScene = this.scene.get(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      if (!touchScene || !this.scene.isActive(SCENE_KEYS.TOUCH_CONTROLS_SCENE)) {
+        this.scene.launch(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      }
+      const touchControlsScene = this.scene.get(SCENE_KEYS.TOUCH_CONTROLS_SCENE) as TouchControlsScene;
+      const touchComponent = touchControlsScene.getTouchComponent();
       this.#controls = new CombinedInputComponent(this.#keyboardComponent, touchComponent);
     } else {
       // Use keyboard controls only
       this.#controls = this.#keyboardComponent;
+      // Stop touch controls scene if running
+      if (this.scene.isActive(SCENE_KEYS.TOUCH_CONTROLS_SCENE)) {
+        this.scene.stop(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      }
     }
 
     this.#createLevel();
@@ -127,7 +135,10 @@ export class GameScene extends Phaser.Scene {
     this.#registerColliders();
     this.#registerCustomEvents();
 
-    this.scene.launch(SCENE_KEYS.UI_SCENE);
+    // Launch UI scene if not already running
+    if (!this.scene.isActive(SCENE_KEYS.UI_SCENE)) {
+      this.scene.launch(SCENE_KEYS.UI_SCENE);
+    }
   }
 
   #registerColliders(): void {
@@ -784,6 +795,13 @@ export class GameScene extends Phaser.Scene {
 
   #handlePlayerDefeatedEvent(): void {
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      // Stop parallel scenes before transitioning to game over
+      if (this.scene.isActive(SCENE_KEYS.TOUCH_CONTROLS_SCENE)) {
+        this.scene.stop(SCENE_KEYS.TOUCH_CONTROLS_SCENE);
+      }
+      if (this.scene.isActive(SCENE_KEYS.UI_SCENE)) {
+        this.scene.stop(SCENE_KEYS.UI_SCENE);
+      }
       this.scene.start(SCENE_KEYS.GAME_OVER_SCENE);
     });
     this.cameras.main.fadeOut(1000, 0, 0, 0);
