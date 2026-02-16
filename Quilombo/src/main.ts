@@ -21,7 +21,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     expandParent: false,
     fullscreenTarget: 'game-container',
   },
-  backgroundColor: '#000000',
+  backgroundColor: '#e0c37f',
   physics: {
     default: 'arcade',
     arcade: {

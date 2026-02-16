@@ -34,7 +34,7 @@ export class StartScene extends Phaser.Scene {
 
     }
 
-    this.add.text(this.scale.width / 2, 100, 'Quilombo', DEFAULT_UI_TEXT_STYLE).setOrigin(0.5);
+    this.add.image(this.scale.width / 2, 50, ASSET_KEYS.LOGO_GAME).setOrigin(0.5).setScale(0.1);
 
     // Create menu items as separate properties for touch interaction
     this.#startGameText = this.add.text(32, 16, 'Start New Game', DEFAULT_UI_TEXT_STYLE).setOrigin(0);
