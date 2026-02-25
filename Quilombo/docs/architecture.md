@@ -10,13 +10,13 @@ Quilombo is built around several interacting systems. This page describes the hi
 ┌─────────────────────────────────────────────────────────────────┐
 │                         Phaser Game                             │
 │                                                                 │
-│  ┌──────────────┐   launches   ┌──────────┐  ┌──────────────┐  │
-│  │  GameScene   │─────────────▶│ UIScene  │  │TouchControls │  │
-│  │  (gameplay)  │              │  (HUD)   │  │   Scene      │  │
-│  └──────┬───────┘              └──────────┘  └──────────────┘  │
-│         │                           ▲                ▲         │
-│         │ contains                  │                │         │
-│         ▼                           └────────────────┘         │
+│  ┌──────────────┐   launches   ┌──────────┐  ┌──────────────┐   │
+│  │  GameScene   │─────────────▶│ UIScene  │  │TouchControls │   │
+│  │  (gameplay)  │              │  (HUD)   │  │   Scene      │   │
+│  └──────┬───────┘              └──────────┘  └──────────────┘   │
+│         │                           ▲                ▲          │
+│         │ contains                  │                │          │
+│         ▼                           └────────────────┘          │
 │  ┌────────────────────────────────────────┐                     │
 │  │           Game Objects                 │  EventBus           │
 │  │  Player ── CharacterGameObject         │  (global pub/sub)   │
@@ -32,6 +32,12 @@ Quilombo is built around several interacting systems. This page describes the hi
 │  │             ├─ InvulnerableComponent   │                     │
 │  │             ├─ WeaponComponent         │                     │
 │  │             └─ StateMachine            │                     │
+│  │                                        │                     │
+│  │  NpcGameObject (planned)               │                     │
+│  │  Villager ─┐    │                      │                     │
+│  │  Guide    ─┤    ├─ AnimationComponent  │                     │
+│  │  Shopkeep ─┤    ├─ DirectionComponent  │                     │
+│  │  QuestGvr ┘    └─ InteractiveObject   │                     │
 │  └────────────────────────────────────────┘                     │
 │                                                                 │
 │  Singletons: DataManager · InventoryManager · EventBus          │
@@ -119,9 +125,11 @@ Phaser allows multiple scenes to run simultaneously. Quilombo uses this to keep 
 
 When the player dies, `GameScene` explicitly stops both sibling scenes before transitioning to `GameOverScene`. When touch controls are disabled in options, `TouchControlsScene` is stopped.
 
-### 7. Factory Pattern (Enemy Spawning)
+### 7. Factory Pattern (Enemy & NPC Spawning)
 
 Enemies are not hard-coded into scenes. Instead, the `GameScene` reads Tiled map object data and uses a factory approach: the numeric `type` field on each Tiled enemy object maps to a specific enemy class (`1=Spider`, `2=Wisp`, `3=Drow`). This makes adding new enemy types a matter of adding a new class and registering the type number.
+
+The same pattern is planned for NPCs: each Tiled NPC object carries an `npcId` string that maps to an `NpcData` record in `npc-configs.ts` and an `NpcGameObject` subclass. See [NPCs](npcs.md).
 
 ### 8. Data-Driven Level Design
 
@@ -137,12 +145,27 @@ See [Levels](levels.md) for details.
 |---|---|
 | `src/scenes/` | All Phaser scene classes |
 | `src/game-objects/` | Player, enemies, weapons, interactive objects |
+| `src/game-objects/npc/` | NPC classes (planned — see [NPCs](npcs.md)) |
 | `src/components/game-object/` | Reusable entity components |
 | `src/components/input/` | Input abstraction layer |
 | `src/components/state-machine/` | State machine + all state implementations |
 | `src/ui/` | VirtualJoystick, TouchButton classes |
 | `src/common/` | Config constants, types, EventBus, DataManager, utilities |
+| `src/common/npc-configs.ts` | NPC dialogue data registry (planned) |
 | `public/assets/` | Images, tilemaps, fonts, asset manifest |
+
+---
+
+## Planned Systems
+
+| System | Status | Doc |
+|---|---|---|
+| NPC characters | Designed, not yet implemented | [npcs.md](npcs.md) |
+| Paged dialogue box | Designed, not yet implemented | [dialogue.md](dialogue.md) |
+| Shop UI | Stub only (Phase 6) | [npcs.md](npcs.md) |
+| Quest system | Stub only (Phase 6) | [npcs.md](npcs.md) |
+| Audio | Not started | — |
+| Town / hub area | Not started | — |
 
 ---
 
