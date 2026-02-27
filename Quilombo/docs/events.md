@@ -191,6 +191,32 @@ GameScene → #checkForAllEnemiesAreDefeated()
 
 ---
 
+---
+
+### SHOW_NPC_DIALOGUE *(planned)*
+
+| Field | Value |
+|---|---|
+| Emitted by | `NpcGameObject` via `InteractiveObjectComponent` callback |
+| Listened by | `UIScene` (shows paged dialogue box), `GameScene` (pauses) |
+| Payload | `{ pages: DialoguePage[], speakerName: string }` |
+
+Fired when the player presses the action key while adjacent to an NPC. `GameScene` pauses immediately (freezing enemies and the player). `UIScene` receives the payload and renders the first page of dialogue. See [Dialogue](dialogue.md) for the full UI specification.
+
+---
+
+### NPC_DIALOGUE_CLOSED *(planned)*
+
+| Field | Value |
+|---|---|
+| Emitted by | `UIScene` (when the last page is advanced past) |
+| Listened by | `GameScene` |
+| Payload | None |
+
+Fired when the player advances past the final page of NPC dialogue. `GameScene` resumes, returning control to the player. Parallels the existing `DIALOG_CLOSED` event but is kept separate so both systems can coexist independently.
+
+---
+
 ## Listener Cleanup
 
 Every scene that subscribes to EventBus events must unsubscribe on shutdown. This is done by listening to Phaser's built-in `SHUTDOWN` scene event:

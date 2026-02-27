@@ -48,6 +48,8 @@
 | [Input](input.md) | Keyboard, touch, and combined input abstraction |
 | [Progression](progression.md) | Keys, chests, items, inventory, and boss progression |
 | [Events](events.md) | EventBus system and all custom game events |
+| [NPCs](npcs.md) | NPC types, architecture, interaction flow, and Tiled integration (designed) |
+| [Dialogue](dialogue.md) | Paged dialogue box UI and data model (designed) |
 
 ---
 
@@ -63,13 +65,15 @@ Quilombo/
 │   │   ├── enemies/
 │   │   │   └── boss/
 │   │   ├── weapons/
-│   │   └── interactive/
+│   │   ├── interactive/
+│   │   └── npc/                 (planned — see docs/npcs.md)
 │   ├── components/              ECS-style components + state machine
 │   │   ├── game-object/         Animation, Life, Speed, etc.
 │   │   ├── input/               Keyboard, touch, combined input
 │   │   └── state-machine/       State machine + all character states
 │   ├── ui/                      Virtual joystick and touch buttons
 │   └── common/                  Config, types, event bus, utilities
+│       └── npc-configs.ts       NPC dialogue registry (planned)
 ├── public/assets/
 │   ├── images/                  Spritesheets, tilemaps, UI images
 │   ├── data/assets.json         Asset pack manifest

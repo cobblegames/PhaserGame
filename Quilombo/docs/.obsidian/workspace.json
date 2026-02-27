@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "combat.md",
+                "file": "scenes.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "combat"
+              "title": "scenes"
             }
           }
         ]
@@ -185,16 +185,17 @@
   },
   "active": "f7decbd7824d1fea",
   "lastOpenFiles": [
+    "screenshot1.png",
+    "dialogue.md",
+    "combat.md",
     "architecture.md.tmp.14924.1772056647758",
     "architecture.md.tmp.14924.1772056637602",
     "architecture.md.tmp.14924.1772056627992",
     "architecture.md.tmp.14924.1772056618152",
-    "dialogue.md",
     "dialogue.md.tmp.14924.1772056596159",
     "npcs.md",
     "npcs.md.tmp.14924.1772056543080",
     "architecture.md",
-    "combat.md",
     "Welcome.md",
     "ui.md"
   ]

@@ -152,7 +152,9 @@ Player overlaps door zone
 ```
 
 **Scene Pause/Resume (during dialog):**
-When a chest is opened and a dialog is shown, `GameScene` pauses (physics and update loop stop). It resumes automatically when the `DIALOG_CLOSED` event fires.
+`GameScene` pauses (physics and update loop stop) in two situations:
+- A chest is opened — resumes when `DIALOG_CLOSED` fires (auto after 3 seconds)
+- An NPC is talked to *(planned)* — resumes when `NPC_DIALOGUE_CLOSED` fires (player-advanced)
 
 **Cleanup:**
 On scene `SHUTDOWN` event, all EventBus listeners are removed to prevent memory leaks.
