@@ -11,6 +11,9 @@ importers:
       phaser:
         specifier: 3.87.0
         version: 3.87.0
+      phaser-animated-tiles:
+        specifier: ^2.0.2
+        version: 2.0.2
     devDependencies:
       '@devshareacademy/eslint-config':
         specifier: 0.0.19
@@ -747,6 +750,9 @@ packages:
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
+
+  phaser-animated-tiles@2.0.2:
+    resolution: {integrity: sha512-tIlaBoG/zOTctsAJuqoJyMSRt4SDmGHPvyjp4OKhtk+f+mNDThoV46N+qkauGDSddsZ2w8le7Sv9M01hNI8mug==}
 
   phaser@3.87.0:
     resolution: {integrity: sha512-AyI1b3T5fp05gzf6WUmu2FNqaZL+Y7w88yBRLf7YZXF9bncUSHpnDrupnTGoPqy/RKHRLBcay7zWeqQ2wiMWcw==}
@@ -1527,6 +1533,8 @@ snapshots:
   path-exists@4.0.0: {}
 
   path-key@3.1.1: {}
+
+  phaser-animated-tiles@2.0.2: {}
 
   phaser@3.87.0:
     dependencies:

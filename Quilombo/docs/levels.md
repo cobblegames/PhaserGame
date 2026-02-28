@@ -178,6 +178,70 @@ If the target door is in a **different level**, a full scene restart is triggere
 
 ---
 
+## Animated Tiles
+
+Tileset animations are authored directly in Tiled using its built-in **Tile Animation Editor** (select a tile → Animation → add frames with per-frame durations). When a tileset is saved as JSON with animation data, each animated tile entry looks like:
+
+```json
+"tiles": [
+  {
+    "animation": [
+      { "duration": 150, "tileid": 0 },
+      { "duration": 150, "tileid": 1 },
+      { "duration": 150, "tileid": 2 }
+    ],
+    "id": 0
+  }
+]
+```
+
+Phaser 3's built-in tilemap renderer does **not** play these animations automatically. The **[phaser-animated-tiles](https://github.com/nkholski/phaser-animated-tiles)** scene plugin (v2.0.2) handles this.
+
+### How It Works
+
+The plugin is registered globally in `src/main.ts` as a Phaser scene plugin:
+
+```ts
+plugins: {
+  scene: [{ key: 'animatedTiles', plugin: AnimatedTiles, mapping: 'animatedTiles' }]
+}
+```
+
+After the tilemap is created in `GameScene.#createLevel()`, the plugin is initialised for that map:
+
+```ts
+(this as any).animatedTiles.init(map);
+```
+
+This scans the map's tilesets for animation data and begins playing any animations it finds on every frame. If a tileset has no animation data (as with the current maps), the call is a no-op.
+
+### Adding Animated Tiles
+
+1. Open the relevant tileset in Tiled
+2. Select the starting tile → **Tile Animation Editor** panel
+3. Add frames and set per-frame durations (in milliseconds)
+4. Re-export the tileset JSON — the `animation` array will appear on the tile
+5. No code changes are required; the plugin picks up animations automatically
+
+---
+
+## Tiled Version Compatibility
+
+Phaser 3's tilemap loader expects the format used by **Tiled 1.10 and earlier**, where object properties include a `type` field. Tiled **1.11+** renamed this field to `class`.
+
+The custom Vite plugin at `config/vite-tiled-compat-plugin.js` transparently normalises map and tileset JSON files so they work with Phaser regardless of which Tiled version exported them. It handles:
+
+| Normalisation | Details |
+|---|---|
+| Object `class` → `type` | Applied to all objects in `objectgroup` layers, including nested layer groups |
+| Tile `class` → `type` | Applied to per-tile type entries inside embedded and standalone tilesets |
+| Embedded tileset tiles | Normalises inline tileset data within a map file |
+| Standalone tileset JSON | Handles `type: "tileset"` files served from the `levels/` directory |
+
+The plugin runs in both Vite dev mode (as an HTTP middleware that rewrites JSON responses) and in production builds (rewrites the copied JSON files in `dist/`).
+
+---
+
 ## Asset Files
 
 | File | Purpose |

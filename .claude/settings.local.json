@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm exec tsc --noEmit)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(pnpm add phaser@3.87.0)"
+    ]
+  }
+}

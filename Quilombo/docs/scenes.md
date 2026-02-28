@@ -103,11 +103,12 @@ Options        → OptionsScene
 **Initialization (create):**
 1. Receives `LevelData` (level name, starting room ID, starting door ID)
 2. Builds the Tiled tilemap — background, foreground, and collision layers
-3. Creates all game objects from Tiled data: doors, enemies, chests, pots, switches
-4. Spawns the player at the position of the specified starting door
-5. Configures all physics colliders and overlap callbacks
-6. Launches `UIScene` and optionally `TouchControlsScene` in parallel
-7. Sets up EventBus listeners
+3. Calls `animatedTiles.init(map)` to begin playing any tile animations defined in the tileset
+4. Creates all game objects from Tiled data: doors, enemies, chests, pots, switches
+5. Spawns the player at the position of the specified starting door
+6. Configures all physics colliders and overlap callbacks
+7. Launches `UIScene` and optionally `TouchControlsScene` in parallel
+8. Sets up EventBus listeners
 
 **Room Management:**
 - All room objects are created upfront at load time but are disabled (invisible, no physics)

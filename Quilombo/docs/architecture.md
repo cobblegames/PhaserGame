@@ -141,17 +141,22 @@ See [Levels](levels.md) for details.
 
 ## File Organization
 
-| Directory | Contents |
+| Directory / File | Contents |
 |---|---|
+| `src/main.ts` | Game config, Phaser scene plugin registration, entry point |
+| `src/animated-tiles-shim.ts` | Sets `window.Phaser` so the UMD animated-tiles bundle loads correctly |
 | `src/scenes/` | All Phaser scene classes |
 | `src/game-objects/` | Player, enemies, weapons, interactive objects |
 | `src/game-objects/npc/` | NPC classes (planned — see [NPCs](npcs.md)) |
 | `src/components/game-object/` | Reusable entity components |
 | `src/components/input/` | Input abstraction layer |
 | `src/components/state-machine/` | State machine + all state implementations |
+| `src/types/` | TypeScript `.d.ts` declarations for untyped third-party packages |
 | `src/ui/` | VirtualJoystick, TouchButton classes |
 | `src/common/` | Config constants, types, EventBus, DataManager, utilities |
 | `src/common/npc-configs.ts` | NPC dialogue data registry (planned) |
+| `config/vite.config.js` | Vite build and dev-server configuration |
+| `config/vite-tiled-compat-plugin.js` | Normalises Tiled 1.11+ JSON exports for Phaser 3 |
 | `public/assets/` | Images, tilemaps, fonts, asset manifest |
 
 ---

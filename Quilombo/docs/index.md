@@ -8,7 +8,8 @@
 
 | Technology | Version | Role |
 |---|---|---|
-| Phaser 3 | 3.87.0 | Game engine (WebGL, physics, input, scenes) |
+| Phaser 3 | 3.90.0 | Game engine (WebGL, physics, input, scenes) |
+| phaser-animated-tiles | 2.0.2 | Phaser scene plugin — plays Tiled tile animations |
 | TypeScript | 5.7.3 | Language |
 | Vite | 6.0.7 | Build tool / dev server |
 | Tiled | — | Level/map editor (exported as JSON) |
@@ -30,6 +31,7 @@
 - Virtual joystick and touch buttons for mobile play
 - Parallel scene architecture (HUD and touch controls in separate scenes)
 - Event-driven cross-scene communication via a global EventBus
+- Animated tile support via phaser-animated-tiles (reads Tiled animation data)
 - Responsive pixel art scaling — works on any device size
 
 ---
@@ -58,7 +60,8 @@
 ```
 Quilombo/
 ├── src/
-│   ├── main.ts                  Game configuration and entry point
+│   ├── main.ts                  Game config, plugin registration, entry point
+│   ├── animated-tiles-shim.ts   Sets window.Phaser global for UMD plugin compat
 │   ├── scenes/                  All Phaser scenes
 │   ├── game-objects/            Player, enemies, weapons, interactive objects
 │   │   ├── player/
@@ -71,15 +74,19 @@ Quilombo/
 │   │   ├── game-object/         Animation, Life, Speed, etc.
 │   │   ├── input/               Keyboard, touch, combined input
 │   │   └── state-machine/       State machine + all character states
+│   ├── types/                   TypeScript declaration files for untyped packages
+│   │   └── phaser-animated-tiles.d.ts
 │   ├── ui/                      Virtual joystick and touch buttons
 │   └── common/                  Config, types, event bus, utilities
 │       └── npc-configs.ts       NPC dialogue registry (planned)
+├── config/
+│   ├── vite.config.js           Vite build configuration
+│   └── vite-tiled-compat-plugin.js  Normalizes Tiled 1.11+ JSON for Phaser 3
 ├── public/assets/
 │   ├── images/                  Spritesheets, tilemaps, UI images
 │   ├── data/assets.json         Asset pack manifest
 │   └── fonts/                   Press Start 2P (pixel font)
 ├── index.html
-├── vite.config.js
 └── docs/                        This wiki
 ```
 
