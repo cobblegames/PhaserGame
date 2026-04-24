@@ -145,7 +145,7 @@ TELEPORT ───────────────────────�
 | PREPARE_ATTACK | ~1 second | Wind-up animation before throwing |
 | ATTACK | Brief | Throws a dagger in the player's direction |
 | HURT | Brief | Hit reaction, then immediately teleports |
-| DEATH | Animation length | Flash + postFX wipe effect |
+| DEATH | Animation length | Flash + Wipe filter effect |
 
 **Teleport Positions:**
 
@@ -163,7 +163,7 @@ A random position is chosen, excluding the current one.
 
 When HP reaches 0:
 1. A flash effect plays (rapid alpha oscillation)
-2. A Phaser postFX wipe animation clears the boss sprite
+2. A Phaser Wipe filter animation clears the boss sprite
 3. `DataManager.bossDefeated` is set to `true`
 4. `BOSS_DEFEATED` event is emitted
 5. Any trap doors linked to the boss fight are opened

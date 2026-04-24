@@ -1,7 +1,7 @@
 {
 	"name": "@devshareacademy/phaser-3-zelda_legend",
 	"version": "1.0.0",
-	"description": "A Phaser 3 implementation of zelda_legend.",
+	"description": "A Phaser 4 implementation of zelda_legend.",
 	"scripts": {
 		"start": "vite --config config/vite.config.js",
 		"build": "tsc && vite build --config config/vite.config.js",
@@ -19,6 +19,8 @@
 		"@devshareacademy/eslint-config": "0.0.19",
 		"@devshareacademy/prettier-config": "0.0.6",
 		"@devshareacademy/tsconfig": "0.0.3",
+		"@eslint/eslintrc": "3.3.1",
+		"@eslint/js": "9.18.0",
 		"@typescript-eslint/eslint-plugin": "8.20.0",
 		"@typescript-eslint/parser": "8.20.0",
 		"eslint": "9.18.0",
@@ -29,7 +31,7 @@
 		"vite": "6.0.7"
 	},
 	"dependencies": {
-		"phaser": "3.87.0",
+		"phaser": "4.0.0",
 		"phaser-animated-tiles": "^2.0.2"
 	},
 	"resolutions": {},

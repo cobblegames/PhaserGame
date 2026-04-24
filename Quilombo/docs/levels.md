@@ -195,7 +195,7 @@ Tileset animations are authored directly in Tiled using its built-in **Tile Anim
 ]
 ```
 
-Phaser 3's built-in tilemap renderer does **not** play these animations automatically. The **[phaser-animated-tiles](https://github.com/nkholski/phaser-animated-tiles)** scene plugin (v2.0.2) handles this.
+Phaser's built-in tilemap renderer does **not** play these animations automatically. The **[phaser-animated-tiles](https://github.com/nkholski/phaser-animated-tiles)** scene plugin (v2.0.2) handles this.
 
 ### How It Works
 
@@ -227,7 +227,7 @@ This scans the map's tilesets for animation data and begins playing any animatio
 
 ## Tiled Version Compatibility
 
-Phaser 3's tilemap loader expects the format used by **Tiled 1.10 and earlier**, where object properties include a `type` field. Tiled **1.11+** renamed this field to `class`.
+Phaser's tilemap loader expects the format used by **Tiled 1.10 and earlier**, where object properties include a `type` field. Tiled **1.11+** renamed this field to `class`.
 
 The custom Vite plugin at `config/vite-tiled-compat-plugin.js` transparently normalises map and tileset JSON files so they work with Phaser regardless of which Tiled version exported them. It handles:
 

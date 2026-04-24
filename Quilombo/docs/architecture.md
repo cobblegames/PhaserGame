@@ -156,7 +156,7 @@ See [Levels](levels.md) for details.
 | `src/common/` | Config constants, types, EventBus, DataManager, utilities |
 | `src/common/npc-configs.ts` | NPC dialogue data registry (planned) |
 | `config/vite.config.js` | Vite build and dev-server configuration |
-| `config/vite-tiled-compat-plugin.js` | Normalises Tiled 1.11+ JSON exports for Phaser 3 |
+| `config/vite-tiled-compat-plugin.js` | Normalises Tiled 1.11+ JSON exports for Phaser |
 | `public/assets/` | Images, tilemaps, fonts, asset manifest |
 
 ---

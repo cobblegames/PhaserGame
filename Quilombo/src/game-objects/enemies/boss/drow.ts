@@ -99,7 +99,15 @@ export class Drow extends CharacterGameObject {
       new DeathState(this, () => {
         this.visible = true;
         flash(this, () => {
-          const fx = this.postFX.addWipe(0.1, 0, 1);
+          const filters = this.enableFilters().filters;
+
+          if (!filters) {
+            this.visible = false;
+            EVENT_BUS.emit(CUSTOM_EVENTS.BOSS_DEFEATED);
+            return;
+          }
+
+          const fx = filters.internal.addWipe(0.1, 0, 1);
           this.scene.add.tween({
             targets: fx,
             progress: 1,

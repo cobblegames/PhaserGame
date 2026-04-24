@@ -352,7 +352,13 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    const collisionLayer = map.createLayer(TILED_LAYER_NAMES.COLLISION, collisionTiles, 0, 0);
+    const collisionLayer = map.createLayer(
+      TILED_LAYER_NAMES.COLLISION,
+      collisionTiles,
+      0,
+      0,
+      false,
+    ) as Phaser.Tilemaps.TilemapLayer | null;
     if (collisionLayer === null) {
       console.log(`encountered error while creating collision layer using data from tiled`);
       return;
@@ -360,7 +366,13 @@ export class GameScene extends Phaser.Scene {
     this.#collisionLayer = collisionLayer;
     this.#collisionLayer.setDepth(2).setAlpha(CONFIG.DEBUG_COLLISION_ALPHA);
 
-    const enemyCollisionLayer = map.createLayer(TILED_LAYER_NAMES.ENEMY_COLLISION, collisionTiles, 0, 0);
+    const enemyCollisionLayer = map.createLayer(
+      TILED_LAYER_NAMES.ENEMY_COLLISION,
+      collisionTiles,
+      0,
+      0,
+      false,
+    ) as Phaser.Tilemaps.TilemapLayer | null;
     if (enemyCollisionLayer === null) {
       console.log(`encountered error while creating enemy collision layer using data from tiled`);
       return;

@@ -1,6 +1,6 @@
 # Quilombo — Game Wiki
 
-**Quilombo** is a Zelda-inspired top-down 2D action-adventure game built with Phaser 3 and TypeScript. Players explore dungeon rooms, fight enemies, solve light puzzles, collect keys and items, and face a boss.
+**Quilombo** is a Zelda-inspired top-down 2D action-adventure game built with Phaser 4 and TypeScript. Players explore dungeon rooms, fight enemies, solve light puzzles, collect keys and items, and face a boss.
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Technology | Version | Role |
 |---|---|---|
-| Phaser 3 | 3.90.0 | Game engine (WebGL, physics, input, scenes) |
+| Phaser 4 | 4.0.0 | Game engine (WebGL, physics, input, scenes) |
 | phaser-animated-tiles | 2.0.2 | Phaser scene plugin — plays Tiled tile animations |
 | TypeScript | 5.7.3 | Language |
 | Vite | 6.0.7 | Build tool / dev server |
@@ -81,7 +81,7 @@ Quilombo/
 │       └── npc-configs.ts       NPC dialogue registry (planned)
 ├── config/
 │   ├── vite.config.js           Vite build configuration
-│   └── vite-tiled-compat-plugin.js  Normalizes Tiled 1.11+ JSON for Phaser 3
+│   └── vite-tiled-compat-plugin.js  Normalizes Tiled 1.11+ JSON for Phaser
 ├── public/assets/
 │   ├── images/                  Spritesheets, tilemaps, UI images
 │   ├── data/assets.json         Asset pack manifest

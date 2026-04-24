@@ -4,7 +4,7 @@
 
 ![Monster Tamer Logo](/docs/logo.png?raw=true 'Monster Tamer Logo')
 
-Legend of the Wispguard - Zelda-like Tutorial with [Phaser 3](https://github.com/photonstorm/phaser)!
+Legend of the Wispguard - Zelda-like Tutorial with [Phaser 4](https://github.com/phaserjs/phaser)!
 
 This repo is the official code repository for the <a href="https://www.youtube.com/playlist?list=PLmcXe0-sfoShPM_vCNsuumh7crnNaLCwX" target="_blank">Legend of the Wispguard: Build a Zelda-Like Game in Phaser 3 Course</a> that is available on YouTube.
 
